@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quan_li_chi_tieu/pages/splash_page.dart';
+import 'package:quan_li_chi_tieu/pages/home/splash_page.dart';
 
 void main() {
   runApp(const MyApp());

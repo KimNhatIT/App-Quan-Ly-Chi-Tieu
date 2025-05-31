@@ -1,21 +1,25 @@
 class Account {
+  String _avatar;
   String _username;
   String _fullname;
   String _password;
-  DateTime _birthday;
   String _email;
 
   Account({
+    required String avatar,
     required String username,
     required String fullname,
     required String password,
-    required DateTime birthday,
     required String email,
-  }) : _username = username,
+  }) : _avatar = avatar,
+       _username = username,
        _fullname = fullname,
        _password = password,
-       _birthday = birthday,
        _email = email;
+
+  // Getter and Setter for avatar
+  String get avatar => _avatar;
+  set avatar(String value) => _avatar = value;
 
   // Getter and Setter for username
   String get username => _username;
@@ -28,10 +32,6 @@ class Account {
   // Getter and Setter for password
   String get password => _password;
   set password(String value) => _password = value;
-
-  // Getter and Setter for birthday
-  DateTime get birthday => _birthday;
-  set birthday(DateTime value) => _birthday = value;
 
   // Getter and Setter for email
   String get email => _email;
