@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quan_li_chi_tieu/data/accounts_data.dart';
 import 'package:quan_li_chi_tieu/models/account.dart';
 import 'package:quan_li_chi_tieu/pages/home/home_page.dart';
-// import 'package:quan_li_chi_tieu/data/accounts_data.dart';
+import 'package:quan_li_chi_tieu/services/share_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,25 +15,34 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _login() async {
+  void _login() {
     final String username = _usernameController.text.trim();
-    final String password = _passwordController.text.trim();
+    final String password = _passwordController.text;
+    final bool loggedIn = true;
 
-    int count = 0;
+    int count = -1;
 
     for (Account account in listAccounts) {
       if (account.username == username && account.password == password) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+        count = 0;
+        break;
       } else {
-        count++;
+        count - 1;
       }
     }
-    if (count == 0) {
+    if (count == -1) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Tên đăng nhập hoặc mật khẩu không đúng')),
+      );
+    } else {
+      ShareService.setLoggedIn(loggedIn);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Đăng nhập thành công')));
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+        (Route<dynamic> route) => false, // xóa toàn bộ route cũ
       );
     }
   }
