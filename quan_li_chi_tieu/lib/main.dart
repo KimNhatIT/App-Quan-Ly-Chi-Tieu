@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:quan_li_chi_tieu/pages/splash_page.dart';
+import 'package:quan_li_chi_tieu/models/account.dart';
+import 'package:quan_li_chi_tieu/pages/home/home_page.dart';
+import 'package:quan_li_chi_tieu/pages/home/splash_page.dart';
+import 'package:quan_li_chi_tieu/services/share_service.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Account? account = await ShareService.getSavedAccount();
+  if (account != null) {
+    bool isLoggedIn = true;
+    runApp(MyApp(isLoggedIn: isLoggedIn));
+  } else {
+    bool isLoggedIn = false;
+    runApp(MyApp(isLoggedIn: isLoggedIn));
+  }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       debugShowCheckedModeBanner: false,
-      home: const SplashPage(),
+      home: isLoggedIn ? HomePage() : SplashPage(),
     );
   }
 }
