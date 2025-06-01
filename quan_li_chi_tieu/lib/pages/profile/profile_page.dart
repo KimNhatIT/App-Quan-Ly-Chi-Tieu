@@ -12,38 +12,44 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Thông tin cá nhân')),
       drawer: DrawerMenu(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(Icons.account_circle, size: 100, color: Colors.blue),
-            Text(
-              account?.username ?? 'Error',
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 50),
-            Row(
-              children: [
-                const SizedBox(width: 10),
-                Icon(Icons.person, size: 30, color: Colors.blue),
-                Text(
-                  ' : ${account?.fullname ?? 'Error'}',
-                  style: TextStyle(fontSize: 20),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Icon(Icons.account_circle, size: 100, color: Colors.blue),
+              Text(
+                account?.username ?? 'Error',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Row(
-              children: [
-                const SizedBox(width: 10),
-                Icon(Icons.email, size: 30, color: Colors.blue),
-                Text(
-                  ' : ${account?.email ?? 'Error'}',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 50),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Icon(Icons.person, size: 30, color: Colors.blue),
+                  Text(
+                    ' : ${account?.fullname ?? 'Error'}',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 30),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Icon(Icons.email, size: 30, color: Colors.blue),
+                  Text(
+                    ' : ${account?.email ?? 'Error'}',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

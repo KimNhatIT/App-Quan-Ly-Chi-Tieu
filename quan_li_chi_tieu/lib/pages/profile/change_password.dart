@@ -78,105 +78,82 @@ class _ChangePasswordState extends State<ChangePassword> {
     return Scaffold(
       appBar: AppBar(title: const Text('Đổi mật khẩu')),
       drawer: DrawerMenu(),
-      body: Column(
-        children: [
-          const SizedBox(height: 30),
-          Row(
-            children: [
-              const SizedBox(width: 10),
-              Expanded(
-                child: TextField(
-                  controller: _oldPasswordController,
-                  obscureText: _obscureOldPassword,
-                  decoration: InputDecoration(
-                    labelText: 'Mật khẩu cũ',
-                    border: OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureOldPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureOldPassword = !_obscureOldPassword;
-                        });
-                      },
-                    ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _oldPasswordController,
+              obscureText: _obscureOldPassword,
+              decoration: InputDecoration(
+                labelText: 'Mật khẩu cũ',
+                border: OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureOldPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                   ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureOldPassword = !_obscureOldPassword;
+                    });
+                  },
                 ),
               ),
-              const SizedBox(width: 10),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              const SizedBox(width: 10),
-              Expanded(
-                child: TextField(
-                  controller: _newPasswordController,
-                  obscureText: _obscureNewPassword,
-                  decoration: InputDecoration(
-                    labelText: 'Mật khẩu mới',
-                    border: OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureNewPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureNewPassword = !_obscureNewPassword;
-                        });
-                      },
-                    ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _newPasswordController,
+              obscureText: _obscureNewPassword,
+              decoration: InputDecoration(
+                labelText: 'Mật khẩu mới',
+                border: OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureNewPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                   ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureNewPassword = !_obscureNewPassword;
+                    });
+                  },
                 ),
               ),
-              const SizedBox(width: 10),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: [
-              const SizedBox(width: 10),
-              Expanded(
-                child: TextField(
-                  controller: _confirmNewPasswordController,
-                  obscureText: _obscureConfirmNewPassword,
-                  decoration: InputDecoration(
-                    labelText: 'Xác nhận mật khẩu mới',
-                    border: OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureConfirmNewPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _obscureConfirmNewPassword =
-                              !_obscureConfirmNewPassword;
-                        });
-                      },
-                    ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _confirmNewPasswordController,
+              obscureText: _obscureConfirmNewPassword,
+              decoration: InputDecoration(
+                labelText: 'Nhập lại mật khẩu mới',
+                border: OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureConfirmNewPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                   ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureConfirmNewPassword = !_obscureConfirmNewPassword;
+                    });
+                  },
                 ),
               ),
-              const SizedBox(width: 10),
-            ],
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _changePassword,
-            child: const Text('Đổi mật khẩu'),
-          ),
-        ],
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _changePassword,
+              child: const Text('Đổi mật khẩu'),
+            ),
+          ],
+        ),
       ),
     );
   }

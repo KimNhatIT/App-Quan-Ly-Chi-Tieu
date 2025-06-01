@@ -74,142 +74,102 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text('Đăng ký'),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: _fullnameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Họ và tên',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.person),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                ],
+              TextField(
+                controller: _fullnameController,
+                decoration: const InputDecoration(
+                  labelText: 'Họ và tên',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.person),
+                ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: _usernameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Tên đăng nhập',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.account_circle_outlined),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                ],
+              TextField(
+                controller: _usernameController,
+                decoration: const InputDecoration(
+                  labelText: 'Tên đăng nhập',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.account_circle_outlined),
+                ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: _emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.email_outlined),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                ],
+              const SizedBox(width: 10),
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email_outlined),
+                ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: _passwordController,
-                      obscureText: _obscurePassword,
-                      decoration: InputDecoration(
-                        labelText: 'Mật khẩu',
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.lock_outline),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
-                        ),
-                      ),
+              TextField(
+                controller: _passwordController,
+                obscureText: _obscurePassword,
+                decoration: InputDecoration(
+                  labelText: 'Mật khẩu',
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                     ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
                   ),
-                  const SizedBox(width: 10),
-                ],
+                ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: _confirmPasswordController,
-                      obscureText: _obscureConfirmPassword,
-                      decoration: InputDecoration(
-                        labelText: 'Nhập lại mật khẩu',
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.lock_outline),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureConfirmPassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureConfirmPassword =
-                                  !_obscureConfirmPassword;
-                            });
-                          },
-                        ),
-                      ),
+              TextField(
+                controller: _confirmPasswordController,
+                obscureText: _obscureConfirmPassword,
+                decoration: InputDecoration(
+                  labelText: 'Nhập lại mật khẩu',
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureConfirmPassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                     ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    },
                   ),
-                  const SizedBox(width: 10),
-                ],
+                ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _register,
                 child: const Text('Đăng ký'),
               ),
-              Expanded(child: Container()),
+              const SizedBox(height: 100),
               Text('Nếu đã có tài khoản'),
               const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
-                  },
-                  child: const Text('Đăng Nhập'),
-                ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: const Text('Đăng Nhập'),
               ),
             ],
           ),

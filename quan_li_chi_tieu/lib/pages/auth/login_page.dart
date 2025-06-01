@@ -65,76 +65,75 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              Text('Đăng nhập'),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: _usernameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Tên đăng nhập',
-                        border: OutlineInputBorder(),
-                        prefixIcon: Icon(Icons.person),
-                      ),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Text('Đăng nhập'),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                SizedBox(width: 20),
+                Expanded(
+                  child: TextField(
+                    controller: _usernameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Tên đăng nhập',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person),
                     ),
                   ),
-                  SizedBox(width: 10),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: _passwordController,
-                      obscureText: _obscurePassword,
-                      decoration: InputDecoration(
-                        labelText: 'Mật khẩu',
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: _login, child: const Text('Đăng nhập')),
-              Expanded(child: Container()),
-              Text('Bạn chưa có tài khoản?'),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegisterPage()),
-                    );
-                  },
-                  child: const Text('Đăng ký'),
                 ),
+                SizedBox(width: 20),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                SizedBox(width: 20),
+                Expanded(
+                  child: TextField(
+                    controller: _passwordController,
+                    obscureText: _obscurePassword,
+                    decoration: InputDecoration(
+                      labelText: 'Mật khẩu',
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.lock),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 20),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(onPressed: _login, child: const Text('Đăng nhập')),
+            Expanded(child: Container()),
+            Text('Bạn chưa có tài khoản?'),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterPage()),
+                  );
+                },
+                child: const Text('Đăng ký'),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

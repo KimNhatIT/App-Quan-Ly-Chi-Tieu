@@ -6,15 +6,14 @@ class MyPieChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<String, double> dataMap = {"A": 10, "B": 40, "C": 40};
-
-    return Scaffold(
-      appBar: AppBar(title: Text('Biểu đồ phần trăm')),
-      body: Center(
+    Map<String, double> dataMap = {"Học tập": 10, "Mua Sắm": 40, "Ăn uống": 40};
+    return Container(
+      color: Colors.grey[350],
+      child: Center(
         child: PieChart(
           dataMap: dataMap,
           animationDuration: Duration(milliseconds: 800),
-          chartRadius: MediaQuery.of(context).size.width / 2.2,
+          chartRadius: MediaQuery.of(context).size.width / 3,
           chartType: ChartType.ring, // hoặc ring nếu muốn vòng khuyết
           chartValuesOptions: ChartValuesOptions(
             showChartValuesInPercentage: true,
