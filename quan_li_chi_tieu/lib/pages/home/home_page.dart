@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quan_li_chi_tieu/pages/home/splash_page.dart';
-import 'package:quan_li_chi_tieu/services/share_service.dart';
+import 'package:quan_li_chi_tieu/components/drawer_menu.dart';
+import 'package:quan_li_chi_tieu/test/mypiechart.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,27 +10,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void _logout() {
-    ShareService.clearLoggedIn();
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Đăng xuất thành công')));
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const SplashPage()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      appBar: AppBar(title: Text('Trang chủ')),
+      drawer: DrawerMenu(),
+      body: Center(
+        child: Column(
           children: [
-            IconButton(onPressed: _logout, icon: Icon(Icons.logout)),
-            Text('Quản lý chi tiêu'),
-            IconButton(onPressed: () {}, icon: Icon(Icons.person)),
+            SizedBox(
+              width: 200,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MyPieChart()),
+                  );
+                },
+                child: const Text('Biểu đồ'),
+              ),
+            ),
           ],
         ),
       ),

@@ -15,12 +15,17 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _fullnameController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
   void _register() {
     final String username = _usernameController.text.trim();
-    final String password = _passwordController.text.trim();
+    final String password = _passwordController.text;
     final String email = _emailController.text.trim();
     final String fullname = _fullnameController.text.trim();
+    final String confirmPassword = _confirmPasswordController.text;
 
     if (username.isEmpty ||
         password.isEmpty ||
@@ -29,6 +34,11 @@ class _RegisterPageState extends State<RegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')),
       );
+      return;
+    } else if (password != confirmPassword) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Mật khẩu không khớp')));
       return;
     }
 
@@ -42,7 +52,6 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     Account newAccount = Account(
-      avatar: 'avatar1.jpg',
       username: username,
       fullname: fullname,
       password: password,
@@ -55,9 +64,10 @@ class _RegisterPageState extends State<RegisterPage> {
       context,
     ).showSnackBar(const SnackBar(content: Text('Đăng ký thành công')));
 
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const LoginPage()),
+      MaterialPageRoute(builder: (context) => LoginPage(username: username)),
+      (Route<dynamic> route) => false,
     );
   }
 
@@ -70,42 +80,136 @@ class _RegisterPageState extends State<RegisterPage> {
             children: [
               Text('Đăng ký'),
               const SizedBox(height: 20),
-              TextField(
-                controller: _fullnameController,
-                decoration: const InputDecoration(
-                  labelText: 'Họ và tên',
-                  border: OutlineInputBorder(),
-                ),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: _fullnameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Họ và tên',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
               ),
               const SizedBox(height: 20),
-              TextField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Tên đăng nhập',
-                  border: OutlineInputBorder(),
-                ),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Tên đăng nhập',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.account_circle_outlined),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
               ),
               const SizedBox(height: 20),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: _emailController,
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.email_outlined),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
               ),
               const SizedBox(height: 20),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Mật khẩu',
-                  border: OutlineInputBorder(),
-                ),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: 'Mật khẩu',
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: _confirmPasswordController,
+                      obscureText: _obscureConfirmPassword,
+                      decoration: InputDecoration(
+                        labelText: 'Nhập lại mật khẩu',
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _register,
                 child: const Text('Đăng ký'),
+              ),
+              Expanded(child: Container()),
+              Text('Nếu đã có tài khoản'),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  child: const Text('Đăng Nhập'),
+                ),
               ),
             ],
           ),
