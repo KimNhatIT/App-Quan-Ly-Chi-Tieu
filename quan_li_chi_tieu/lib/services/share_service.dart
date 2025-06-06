@@ -41,28 +41,28 @@ class ShareService {
 
   // =============*SAVE LIST<ACCOUNT>*============== //
 
-  // Future<void> saveAccountList(List<Account> listAccounts) async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final List<Map<String, dynamic>> jsonList =
-  //       listAccounts.map((Account account) {
-  //         return account.toJson();
-  //       }).toList();
-  //   final String jsonString = jsonEncode(jsonList);
-  //   await prefs.setString('account_list', jsonString);
-  // }
+  Future<void> saveAccountList(List<Account> listAccounts) async {
+    dynamic prefs = await SharedPreferences.getInstance();
+    List<Map<String, dynamic>> jsonList =
+        listAccounts.map((Account account) {
+          return account.toJson();
+        }).toList();
+    final String jsonString = jsonEncode(jsonList);
+    await prefs.setString('account_list', jsonString);
+  }
 
-  // Future<List<Account>> getAccountList() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final String? jsonString = prefs.getString('account_list');
-  //   if (jsonString == null) return [];
-  //   final List<dynamic> jsonList = jsonDecode(jsonString);
-  //   return jsonList.map((json) => Account.fromJson(json)).toList();
-  // }
+  Future<List<Account>> getAccountList() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? jsonString = prefs.getString('account_list');
+    if (jsonString == null) return [];
+    final List<dynamic> jsonList = jsonDecode(jsonString);
+    return jsonList.map((json) => Account.fromJson(json)).toList();
+  }
 
-  // Future<void> clearAccountList() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   await prefs.remove('account_list');
-  // }
+  Future<void> clearAccountList() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('account_list');
+  }
 
   // =========================== //
 }
