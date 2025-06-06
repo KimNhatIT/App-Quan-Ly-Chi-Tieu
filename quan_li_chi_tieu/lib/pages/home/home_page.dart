@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.width * 2 / 3,
-              child: MyPieChart(),
+              child: MyPieChart(accountNow: widget.accountNow),
             ),
             const SizedBox(height: 20),
             Row(

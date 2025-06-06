@@ -55,6 +55,7 @@ class _ChangePasswordState extends State<ChangePassword> {
     for (Account account in listAccounts) {
       if (account.username == widget.accountNow!.username) {
         account.password = newPassword;
+        widget.accountNow!.password = newPassword;
       }
     }
 
