@@ -35,6 +35,11 @@ class _RegisterPageState extends State<RegisterPage> {
         const SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')),
       );
       return;
+    } else if (password.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Mật phải ít nhất có 8 kí tự')),
+      );
+      return;
     } else if (password != confirmPassword) {
       ScaffoldMessenger.of(
         context,

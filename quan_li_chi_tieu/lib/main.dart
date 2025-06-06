@@ -13,11 +13,10 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  WidgetsFlutterBinding.ensureInitialized();
   Account? account = await ShareService.getSavedAccount();
   if (account != null) {
     bool isLoggedIn = true;
-    runApp(MyApp(isLoggedIn: isLoggedIn));
+    runApp(MyApp(isLoggedIn: isLoggedIn, accountNow: account));
   } else {
     bool isLoggedIn = false;
     runApp(MyApp(isLoggedIn: isLoggedIn));
@@ -26,14 +25,15 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
-  const MyApp({super.key, required this.isLoggedIn});
+  final Account? accountNow;
+  const MyApp({super.key, required this.isLoggedIn, this.accountNow});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       debugShowCheckedModeBanner: false,
-      home: isLoggedIn ? HomePage() : SplashPage(),
+      home: isLoggedIn ? HomePage(accountNow: accountNow) : SplashPage(),
     );
   }
 }

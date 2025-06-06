@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
       ).showSnackBar(const SnackBar(content: Text('Đăng nhập thành công')));
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage(accountNow: account)),
         (Route<dynamic> route) => false,
       );
     }
