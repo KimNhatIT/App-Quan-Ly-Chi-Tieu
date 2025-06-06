@@ -155,6 +155,12 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
               ),
             ],
           });
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HomePage(accountNow: widget.accountNow),
+            ),
+          );
         } else {
           for (Spending spending in userSpending) {
             if (spending.id > maxID) {
