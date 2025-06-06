@@ -5,6 +5,7 @@ import 'package:quan_li_chi_tieu/pages/home/splash_page.dart';
 import 'package:quan_li_chi_tieu/pages/profile/change_password.dart';
 import 'package:quan_li_chi_tieu/pages/profile/profile_page.dart';
 import 'package:quan_li_chi_tieu/services/share_service.dart';
+import 'package:quan_li_chi_tieu/test/dropdown_example.dart';
 
 class DrawerMenu extends StatefulWidget {
   const DrawerMenu({super.key});
@@ -43,9 +44,10 @@ class _DrawerMenuState extends State<DrawerMenu> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Đăng xuất thành công')));
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const SplashPage()),
+      (Route<dynamic> route) => false,
     );
   }
 
@@ -99,7 +101,9 @@ class _DrawerMenuState extends State<DrawerMenu> {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
+                MaterialPageRoute(
+                  builder: (context) => HomePage(accountNow: _account),
+                ),
               );
             },
           ),
@@ -112,6 +116,16 @@ class _DrawerMenuState extends State<DrawerMenu> {
             leading: const Icon(Icons.lock_open),
             title: const Text('Đổi mật khẩu'),
             onTap: _navigateToChangePassword,
+          ),
+          ListTile(
+            leading: const Icon(Icons.developer_mode),
+            title: const Text('Trang test'),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => DropdownExample()),
+              );
+            },
           ),
           Expanded(child: Container()),
           ListTile(
