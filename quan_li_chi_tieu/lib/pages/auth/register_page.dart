@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:quan_li_chi_tieu/data/accounts_data.dart';
+import 'package:quan_li_chi_tieu/data/spending_data.dart';
 import 'package:quan_li_chi_tieu/models/account.dart';
+import 'package:quan_li_chi_tieu/models/spending.dart';
 import 'package:quan_li_chi_tieu/pages/auth/login_page.dart';
+import 'package:quan_li_chi_tieu/services/share_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -20,9 +23,16 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
+  void loadAccounts() async {
+    List<Account> accounts = await ShareService.getAccountList();
+    setState(() {
+      listAccounts = accounts;
+    });
+  }
+
   void _register() {
     final String username = _usernameController.text.trim();
-    final String password = _passwordController.text;
+    final String password = _passwordController.text.trim();
     final String email = _emailController.text.trim();
     final String fullname = _fullnameController.text.trim();
     final String confirmPassword = _confirmPasswordController.text;
@@ -35,7 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
         const SnackBar(content: Text('Vui lòng điền đầy đủ thông tin')),
       );
       return;
-    } else if (password.length < 8) {
+    } else if (password.length < 8 || confirmPassword.length < 8) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Mật phải ít nhất có 8 kí tự')),
       );
@@ -63,17 +73,26 @@ class _RegisterPageState extends State<RegisterPage> {
       email: email,
     );
 
+    listSpending.addAll({username: []});
+    ShareService.saveUserSpending(listSpending);
+
     listAccounts.add(newAccount);
 
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Đăng ký thành công')));
-
+    ShareService.saveAccountList(listAccounts);
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginPage(username: username)),
       (Route<dynamic> route) => false,
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadAccounts();
   }
 
   @override

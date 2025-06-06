@@ -12,7 +12,6 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
   Account? account = await ShareService.getSavedAccount();
   if (account != null) {
     bool isLoggedIn = true;

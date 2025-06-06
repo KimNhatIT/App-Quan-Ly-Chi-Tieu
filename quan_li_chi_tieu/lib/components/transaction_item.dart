@@ -3,8 +3,10 @@ import 'package:quan_li_chi_tieu/models/spending.dart';
 
 class TransactionItem extends StatelessWidget {
   final Spending spending;
+  final Function()? onDelete;
+  final Function()? onEdit;
 
-  const TransactionItem({super.key, required this.spending});
+  const TransactionItem(this.spending, {super.key, this.onDelete, this.onEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +14,10 @@ class TransactionItem extends StatelessWidget {
       children: [
         ListTile(
           leading: Icon(spending.icon, color: spending.color),
-          title: Text(spending.name),
+          title: Text(
+            spending.name,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           subtitle: Column(
             children: [
               Row(
@@ -44,9 +49,9 @@ class TransactionItem extends StatelessWidget {
 
           trailing: IconButton(
             icon: Icon(Icons.delete, color: Colors.grey),
-            onPressed: () {},
+            onPressed: onDelete,
           ),
-          onTap: () {},
+          onTap: onEdit,
         ),
         const Divider(),
       ],

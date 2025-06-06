@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:quan_li_chi_tieu/models/account.dart';
+import 'package:quan_li_chi_tieu/models/spending.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShareService {
@@ -41,7 +42,7 @@ class ShareService {
 
   // =============*SAVE LIST<ACCOUNT>*============== //
 
-  Future<void> saveAccountList(List<Account> listAccounts) async {
+  static Future<void> saveAccountList(List<Account> listAccounts) async {
     dynamic prefs = await SharedPreferences.getInstance();
     List<Map<String, dynamic>> jsonList =
         listAccounts.map((Account account) {
@@ -51,7 +52,7 @@ class ShareService {
     await prefs.setString('account_list', jsonString);
   }
 
-  Future<List<Account>> getAccountList() async {
+  static Future<List<Account>> getAccountList() async {
     final prefs = await SharedPreferences.getInstance();
     final String? jsonString = prefs.getString('account_list');
     if (jsonString == null) return [];
@@ -59,10 +60,42 @@ class ShareService {
     return jsonList.map((json) => Account.fromJson(json)).toList();
   }
 
-  Future<void> clearAccountList() async {
+  // =============*SAVE LIST<SPENDING> THEO USERNAME*============== //
+
+  static Future<void> saveUserSpending(
+    Map<String, List<Spending>> saveListSpending,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('account_list');
+
+    Map<String, dynamic> jsonMap = {};
+
+    saveListSpending.forEach((username, spendings) {
+      jsonMap[username] = spendings.map((s) => s.toJson()).toList();
+    });
+
+    final String jsonString = jsonEncode(jsonMap);
+    await prefs.setString('all_spending_data', jsonString);
   }
 
-  // =========================== //
+  static Future<Map<String, List<Spending>>> getAllUserSpending() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? jsonString = prefs.getString('all_spending_data');
+
+    if (jsonString == null) return {};
+
+    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    Map<String, List<Spending>> result = {};
+
+    jsonMap.forEach((username, spendingsJson) {
+      List<Spending> spendings =
+          (spendingsJson as List)
+              .map((json) => Spending.fromJson(json))
+              .toList();
+      result[username] = spendings;
+    });
+
+    return result;
+  }
+
+  // =================================== //
 }

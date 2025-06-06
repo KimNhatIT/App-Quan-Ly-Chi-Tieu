@@ -4,6 +4,7 @@ import 'package:quan_li_chi_tieu/data/spending_data.dart';
 import 'package:quan_li_chi_tieu/models/account.dart';
 import 'package:quan_li_chi_tieu/models/spending.dart';
 import 'package:quan_li_chi_tieu/pages/home/home_page.dart';
+import 'package:quan_li_chi_tieu/services/share_service.dart';
 
 class AddTransactionPage extends StatefulWidget {
   final Account? accountNow;
@@ -21,6 +22,13 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   DateTime selectedDate = DateTime.now();
 
   String selectedCategory = 'Ăn uống'; // Mặc định
+
+  void _getListSpending() async {
+    Map<String, List<Spending>> data = await ShareService.getAllUserSpending();
+    setState(() {
+      listSpending = data;
+    });
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -117,14 +125,17 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Vui lòng nhập Số tiền')));
+      return;
     } else if (int.parse(money) < 1000) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Số tiền tối thiểu có thể nhập là 1000')),
       );
+      return;
     } else {
-      final username = widget.accountNow?.username ?? 'unknown_user';
+      final username = widget.accountNow!.username;
+      final List<Spending>? userSpending = listSpending[username];
 
-      if (!listSpending.containsKey(username)) {
+      if (!listSpending.containsKey(username) || userSpending!.isEmpty) {
         listSpending.addAll({
           username: [
             Spending(
@@ -138,57 +149,50 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             ),
           ],
         });
+        ShareService.saveUserSpending(listSpending);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(accountNow: widget.accountNow),
+          ),
+          (Route<dynamic> route) => false,
+        );
       } else {
-        final List<Spending>? userSpending = listSpending[username];
         int maxID = 0;
-        if (userSpending!.isEmpty) {
-          listSpending.addAll({
-            username: [
-              Spending(
-                id: 1,
-                type: typeSpending!,
-                amount: int.parse(money),
-                color: color,
-                icon: icon,
-                name: typeCategory,
-                date: date,
-              ),
-            ],
-          });
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(accountNow: widget.accountNow),
-            ),
-          );
-        } else {
-          for (Spending spending in userSpending) {
-            if (spending.id > maxID) {
-              maxID = spending.id;
-            }
+        for (Spending spending in userSpending) {
+          if (spending.id > maxID) {
+            maxID = spending.id;
           }
-          int newID = maxID + 1;
-          listSpending[username]!.add(
-            Spending(
-              id: newID,
-              type: typeSpending!,
-              amount: int.parse(money),
-              color: color,
-              icon: icon,
-              name: typeCategory,
-              date: date,
-            ),
-          );
-          print(newID);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => HomePage(accountNow: widget.accountNow),
-            ),
-          );
         }
+        int newID = maxID + 1;
+        listSpending[username]!.add(
+          Spending(
+            id: newID,
+            type: typeSpending!,
+            amount: int.parse(money),
+            color: color,
+            icon: icon,
+            name: typeCategory,
+            date: date,
+          ),
+        );
+        ShareService.saveUserSpending(listSpending);
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(accountNow: widget.accountNow),
+          ),
+          (Route<dynamic> route) => false,
+        );
       }
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getListSpending();
   }
 
   @override

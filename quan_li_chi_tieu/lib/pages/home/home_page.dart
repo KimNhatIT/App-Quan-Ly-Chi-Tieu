@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:quan_li_chi_tieu/components/app_dialog.dart';
 import 'package:quan_li_chi_tieu/components/drawer_menu.dart';
 import 'package:quan_li_chi_tieu/components/transaction_item.dart';
 import 'package:quan_li_chi_tieu/data/spending_data.dart';
 import 'package:quan_li_chi_tieu/models/account.dart';
 import 'package:quan_li_chi_tieu/models/spending.dart';
 import 'package:quan_li_chi_tieu/pages/home/add_transaction_page.dart';
-import 'package:quan_li_chi_tieu/test/mypiechart.dart';
+import 'package:quan_li_chi_tieu/components/mypiechart.dart';
+import 'package:quan_li_chi_tieu/services/share_service.dart';
 
 class HomePage extends StatefulWidget {
   final Account? accountNow;
@@ -16,6 +18,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  void _getListSpending() async {
+    Map<String, List<Spending>> data = await ShareService.getAllUserSpending();
+    setState(() {
+      listSpending = data;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getListSpending();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +80,47 @@ class _HomePageState extends State<HomePage> {
                               listSpending[widget.accountNow!.username]!,
                             )..sort((a, b) => b.date.compareTo(a.date));
                             return sortedList.map((spending) {
-                              return TransactionItem(spending: spending);
+                              return TransactionItem(
+                                spending,
+                                onDelete: () {
+                                  AppDialog.dialog(
+                                    context,
+                                    content: 'Xác nhận xóa?',
+                                    action: () {
+                                      listSpending[widget.accountNow!.username]
+                                          ?.removeWhere(
+                                            (item) => item.id == spending.id,
+                                          );
+
+                                      setState(() {
+                                        ShareService.saveUserSpending(
+                                          listSpending,
+                                        );
+                                      });
+                                    },
+                                  );
+                                },
+                                onEdit: () {
+                                  AppDialog.editlog(
+                                    context,
+                                    content: 'Chỉnh sửa thông tin',
+                                    initialAmount: spending.amount,
+                                    initialDate: spending.date,
+                                    onConfirm: (
+                                      int newAmount,
+                                      DateTime newDate,
+                                    ) {
+                                      setState(() {
+                                        spending.amount = newAmount;
+                                        spending.date = newDate;
+                                        ShareService.saveUserSpending(
+                                          listSpending,
+                                        );
+                                      });
+                                    },
+                                  );
+                                },
+                              );
                             }).toList();
                           })(),
                       ],
