@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width * 2 / 3,
+              height: MediaQuery.of(context).size.width * 5 / 10,
               child: MyPieChart(accountNow: widget.accountNow),
             ),
             const SizedBox(height: 20),

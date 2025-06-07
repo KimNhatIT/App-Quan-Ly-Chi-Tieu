@@ -45,7 +45,7 @@ class _SplashPageState extends State<SplashPage> {
             builder: (context, offset, child) {
               return FractionalTranslation(translation: offset, child: child);
             },
-            child: Image.asset('assets/images/logo.png'),
+            child: Image.asset('assets/images/logo_app.png'),
           ),
           // Buttons slide up from bottom
           Positioned(
