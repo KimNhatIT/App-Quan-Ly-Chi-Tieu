@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quan_li_chi_tieu/components/drawer_menu.dart';
 import 'package:quan_li_chi_tieu/data/accounts_data.dart';
 import 'package:quan_li_chi_tieu/models/account.dart';
+import 'package:quan_li_chi_tieu/services/share_service.dart';
 
 class ChangePassword extends StatefulWidget {
   final Account? accountNow;
@@ -20,6 +21,13 @@ class _ChangePasswordState extends State<ChangePassword> {
   bool _obscureOldPassword = true;
   bool _obscureNewPassword = true;
   bool _obscureConfirmNewPassword = true;
+
+  void _getallAccount() async {
+    List<Account> data = await ShareService.getAccountList();
+    setState(() {
+      listAccounts = data;
+    });
+  }
 
   void _changePassword() {
     final String oldPassword = _oldPasswordController.text;
@@ -43,21 +51,27 @@ class _ChangePasswordState extends State<ChangePassword> {
         context,
       ).showSnackBar(const SnackBar(content: Text('Mật khẩu cũ không đúng')));
       return;
-    } else if (newPassword == oldPassword) {
+    } else if (newPassword == widget.accountNow!.password) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Mật khẩu mới không được trùng với mật khẩu cũ'),
         ),
       );
       return;
+    } else if (newPassword.length < 8 || confirmNewPassword.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Mật khẩu phải có ít nhất 8 kí tự')),
+      );
+      return;
     }
 
-    for (Account account in listAccounts) {
-      if (account.username == widget.accountNow!.username) {
-        account.password = newPassword;
-        widget.accountNow!.password = newPassword;
+    for (int i = 0; i < listAccounts.length; i++) {
+      if (listAccounts[i].username == widget.accountNow!.username) {
+        listAccounts[i].password = newPassword;
       }
     }
+
+    ShareService.saveAccountList(listAccounts);
 
     ScaffoldMessenger.of(
       context,
@@ -72,6 +86,7 @@ class _ChangePasswordState extends State<ChangePassword> {
   void initState() {
     super.initState();
     // Initialize any necessary data or state here
+    _getallAccount();
   }
 
   @override

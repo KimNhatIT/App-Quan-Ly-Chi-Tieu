@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:quan_li_chi_tieu/data/accounts_data.dart';
 import 'package:quan_li_chi_tieu/data/spending_data.dart';
 import 'package:quan_li_chi_tieu/models/account.dart';
-import 'package:quan_li_chi_tieu/models/spending.dart';
 import 'package:quan_li_chi_tieu/pages/auth/login_page.dart';
 import 'package:quan_li_chi_tieu/services/share_service.dart';
 
@@ -72,9 +71,6 @@ class _RegisterPageState extends State<RegisterPage> {
       password: password,
       email: email,
     );
-
-    listSpending.addAll({username: []});
-    ShareService.saveUserSpending(listSpending);
 
     listAccounts.add(newAccount);
 
