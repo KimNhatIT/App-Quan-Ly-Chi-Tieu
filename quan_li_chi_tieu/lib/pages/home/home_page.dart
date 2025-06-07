@@ -18,6 +18,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int income = 0;
+  int expense = 0;
+  int balance = 0;
+
   void _getListSpending() async {
     Map<String, List<Spending>> data = await ShareService.getAllUserSpending();
     setState(() {
@@ -25,11 +29,36 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _getValueForStatistical() {
+    int tmpIncome = 0;
+    int tmpExpence = 0;
+    if (listSpending[widget.accountNow!.username] == null ||
+        listSpending[widget.accountNow!.username]!.isEmpty) {
+      setState(() {
+        income = tmpIncome;
+        expense = tmpExpence;
+      });
+    } else {
+      for (Spending spend in listSpending[widget.accountNow?.username]!) {
+        if (spend.type == 'Tiền thu') {
+          tmpIncome = tmpIncome + spend.amount;
+        } else {
+          tmpExpence = tmpExpence + spend.amount;
+        }
+      }
+      setState(() {
+        income = tmpIncome;
+        expense = tmpExpence;
+      });
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _getListSpending();
+    _getValueForStatistical();
   }
 
   @override
@@ -43,7 +72,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.width * 2 / 3,
+              height: MediaQuery.of(context).size.width / 2,
               child: MyPieChart(accountNow: widget.accountNow),
             ),
             const SizedBox(height: 20),
@@ -146,6 +175,26 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
+            ),
+            ListTile(
+              title: Row(
+                children: [
+                  const Spacer(),
+                  Icon(Icons.list, color: Colors.blue),
+                  const SizedBox(width: 8),
+                  Text('Thống kê', style: TextStyle(color: Colors.blue)),
+                  const Spacer(),
+                ],
+              ),
+              onTap: () {
+                balance = income - expense;
+                AppDialog.showStatistical(
+                  context,
+                  income: income,
+                  expense: expense,
+                  balance: balance,
+                );
+              },
             ),
           ],
         ),

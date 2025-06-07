@@ -161,4 +161,83 @@ class AppDialog {
       },
     );
   }
+
+  static Future<void> showStatistical(
+    BuildContext context, {
+    required int income, // tiền thu
+    required int expense,
+    required int balance,
+  }) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Số liệu thống kê'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text('Tổng thu: '),
+                        const Spacer(),
+                        Text(
+                          '+${income.toString()}',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        Text(' VNĐ'),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('Tổng chi: '),
+                        const Spacer(),
+                        Text(
+                          '-${expense.toString()}',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        Text(' VNĐ'),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('Số dư: '),
+                        const Spacer(),
+                        if (balance < 0)
+                          Text(
+                            '${balance.toString()}',
+                            style: TextStyle(color: Colors.red),
+                          )
+                        else if (balance > 0)
+                          Text(
+                            '+${balance.toString()}',
+                            style: TextStyle(color: Colors.green),
+                          )
+                        else
+                          Text(
+                            balance.toString(),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        Text(' VNĐ'),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Đóng'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

@@ -22,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
-  void loadAccounts() async {
+  void _loadAccounts() async {
     List<Account> accounts = await ShareService.getAccountList();
     setState(() {
       listAccounts = accounts;
@@ -88,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-    loadAccounts();
+    _loadAccounts();
   }
 
   @override
