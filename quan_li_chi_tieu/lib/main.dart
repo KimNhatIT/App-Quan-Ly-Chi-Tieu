@@ -12,7 +12,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  Account? account = await ShareService.getSavedAccount();
+  Account? account = await ShareService.getAccountFromJson();
   if (account != null) {
     bool isLoggedIn = true;
     runApp(MyApp(isLoggedIn: isLoggedIn, accountNow: account));
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       debugShowCheckedModeBanner: false,
-      home: isLoggedIn ? HomePage(accountNow: accountNow) : SplashPage(),
+      home: isLoggedIn ? HomePage(accountNow: accountNow!) : SplashPage(),
     );
   }
 }

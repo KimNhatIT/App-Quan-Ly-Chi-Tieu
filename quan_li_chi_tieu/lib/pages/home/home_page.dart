@@ -10,45 +10,47 @@ import 'package:quan_li_chi_tieu/components/mypiechart.dart';
 import 'package:quan_li_chi_tieu/services/share_service.dart';
 
 class HomePage extends StatefulWidget {
-  final Account? accountNow;
-  const HomePage({super.key, this.accountNow});
+  final Account accountNow;
+  const HomePage({super.key, required this.accountNow});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int income = 0;
-  int expense = 0;
-  int balance = 0;
+  int _income = 0;
+  int _expense = 0;
+  int _balance = 0;
 
-  void _getListSpending() async {
-    Map<String, List<Spending>> data = await ShareService.getAllUserSpending();
-    setState(() {
-      listSpending = data;
-    });
-  }
+  late Account _account;
 
-  void _getValueForStatistical() {
+  Future<void> _getValueForStatistical() async {
     int tmpIncome = 0;
     int tmpExpence = 0;
-    if (listSpending[widget.accountNow!.username] == null ||
-        listSpending[widget.accountNow!.username]!.isEmpty) {
+    int tmpBalance = 0;
+
+    listSpending = await ShareService.getAllMapSpendingFromJson();
+
+    if (!listSpending!.containsKey(_account.username) ||
+        listSpending![_account.username]!.isEmpty) {
       setState(() {
-        income = tmpIncome;
-        expense = tmpExpence;
+        _income = tmpIncome;
+        _expense = tmpExpence;
       });
     } else {
-      for (Spending spend in listSpending[widget.accountNow?.username]!) {
-        if (spend.type == 'Tiền thu') {
-          tmpIncome = tmpIncome + spend.amount;
+      for (Spending spending in listSpending![_account.username]!) {
+        if (spending.type == 'Tiền thu') {
+          tmpIncome += spending.amount;
         } else {
-          tmpExpence = tmpExpence + spend.amount;
+          tmpExpence += spending.amount;
         }
       }
       setState(() {
-        income = tmpIncome;
-        expense = tmpExpence;
+        _income = tmpIncome;
+        _expense = tmpExpence;
+        tmpBalance = tmpIncome - tmpExpence;
+        _balance = tmpBalance;
+        print('$tmpExpence : $tmpIncome : $tmpBalance');
       });
     }
   }
@@ -57,15 +59,15 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getListSpending();
     _getValueForStatistical();
+    _account = widget.accountNow;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Trang chủ')),
-      drawer: DrawerMenu(),
+      drawer: DrawerMenu(_account),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +76,7 @@ class _HomePageState extends State<HomePage> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.width / 2,
 
-              child: MyPieChart(accountNow: widget.accountNow),
+              child: MyPieChart(_account),
             ),
             const SizedBox(height: 20),
             Row(
@@ -91,8 +93,8 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         Divider(),
-                        if (listSpending[widget.accountNow!.username] == null ||
-                            listSpending[widget.accountNow!.username]!.isEmpty)
+                        if (listSpending![_account.username] == null ||
+                            listSpending![_account.username]!.isEmpty)
                           const Center(
                             child: Column(
                               children: [
@@ -101,13 +103,12 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                           ),
-                        if (listSpending[widget.accountNow!.username] != null &&
-                            listSpending[widget.accountNow!.username]!
-                                .isNotEmpty)
+                        if (listSpending![_account.username] != null &&
+                            listSpending![_account.username]!.isNotEmpty)
                           ...(() {
                             // Tạo bản sao và sắp xếp theo ngày giảm dần (mới nhất trước)
                             final sortedList = List<Spending>.from(
-                              listSpending[widget.accountNow!.username]!,
+                              listSpending![_account.username]!,
                             )..sort((a, b) => b.date.compareTo(a.date));
                             return sortedList.map((spending) {
                               return TransactionItem(
@@ -115,17 +116,18 @@ class _HomePageState extends State<HomePage> {
                                 onDelete: () {
                                   AppDialog.dialog(
                                     context,
-                                    content: 'Xác nhận xóa?',
+                                    content: 'Xác nhận xóa giao dịch?',
                                     action: () {
-                                      listSpending[widget.accountNow!.username]
+                                      listSpending![_account.username]
                                           ?.removeWhere(
                                             (item) => item.id == spending.id,
                                           );
 
                                       setState(() {
-                                        ShareService.saveUserSpending(
-                                          listSpending,
+                                        ShareService.saveMapSpendingToJson(
+                                          listSpending!,
                                         );
+                                        _getValueForStatistical();
                                       });
                                     },
                                   );
@@ -143,9 +145,10 @@ class _HomePageState extends State<HomePage> {
                                       setState(() {
                                         spending.amount = newAmount;
                                         spending.date = newDate;
-                                        ShareService.saveUserSpending(
-                                          listSpending,
+                                        ShareService.saveMapSpendingToJson(
+                                          listSpending!,
                                         );
+                                        _getValueForStatistical();
                                       });
                                     },
                                   );
@@ -165,9 +168,8 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                             builder:
-                                (context) => AddTransactionPage(
-                                  accountNow: widget.accountNow,
-                                ),
+                                (context) =>
+                                    AddTransactionPage(accountNow: _account),
                           ),
                         );
                       },
@@ -188,15 +190,15 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               onTap: () {
-                balance = income - expense;
                 AppDialog.showStatistical(
                   context,
-                  income: income,
-                  expense: expense,
-                  balance: balance,
+                  income: _income,
+                  expense: _expense,
+                  balance: _balance,
                 );
               },
             ),
+            const SizedBox(height: 10),
           ],
         ),
       ),

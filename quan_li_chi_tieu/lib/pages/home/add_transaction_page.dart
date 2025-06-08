@@ -24,7 +24,8 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   String selectedCategory = 'Ăn uống'; // Mặc định
 
   void _getListSpending() async {
-    Map<String, List<Spending>> data = await ShareService.getAllUserSpending();
+    Map<String, List<Spending>>? data =
+        await ShareService.getAllMapSpendingFromJson();
     setState(() {
       listSpending = data;
     });
@@ -133,10 +134,10 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       return;
     } else {
       final username = widget.accountNow!.username;
-      final List<Spending>? userSpending = listSpending[username];
+      final List<Spending>? userSpending = listSpending?[username];
 
-      if (!listSpending.containsKey(username) || userSpending!.isEmpty) {
-        listSpending.addAll({
+      if (!listSpending!.containsKey(username) || userSpending!.isEmpty) {
+        listSpending?.addAll({
           username: [
             Spending(
               id: 1,
@@ -149,11 +150,14 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             ),
           ],
         });
-        ShareService.saveUserSpending(listSpending);
+        ShareService.saveMapSpendingToJson(listSpending!);
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Đã thêm giao dịch')));
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(accountNow: widget.accountNow),
+            builder: (context) => HomePage(accountNow: widget.accountNow!),
           ),
           (Route<dynamic> route) => false,
         );
@@ -165,7 +169,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
           }
         }
         int newID = maxID + 1;
-        listSpending[username]!.add(
+        listSpending?[username]!.add(
           Spending(
             id: newID,
             type: typeSpending!,
@@ -176,11 +180,11 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             date: date,
           ),
         );
-        ShareService.saveUserSpending(listSpending);
+        ShareService.saveMapSpendingToJson(listSpending!);
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(accountNow: widget.accountNow),
+            builder: (context) => HomePage(accountNow: widget.accountNow!),
           ),
           (Route<dynamic> route) => false,
         );
@@ -199,7 +203,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Thêm Giao Dịch')),
-      drawer: DrawerMenu(),
+      drawer: DrawerMenu(widget.accountNow!),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(10),
         child: Column(

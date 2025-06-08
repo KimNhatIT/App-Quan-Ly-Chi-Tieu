@@ -68,6 +68,22 @@ class _SplashPageState extends State<SplashPage> {
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent, // Màu nền đậm
+                        foregroundColor: Colors.white, // Màu chữ
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12), // Bo góc
+                        ),
+                        elevation: 4, // Bóng đổ
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -81,6 +97,22 @@ class _SplashPageState extends State<SplashPage> {
                   SizedBox(
                     width: 200,
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.yellow, // Màu nền đậm hơn
+                        foregroundColor: Colors.black, // Màu chữ trắng
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 14,
+                          horizontal: 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 4,
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,

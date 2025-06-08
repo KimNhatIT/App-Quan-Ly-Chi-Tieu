@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AppDialog {
   AppDialog._();
@@ -172,6 +173,10 @@ class AppDialog {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
+        final formatter = NumberFormat.decimalPattern('vi_VN');
+        String formattedInCome = formatter.format(income);
+        String formattedExpence = formatter.format(expense);
+        String formattedBalance = formatter.format(balance);
         return AlertDialog(
           title: Text('Số liệu thống kê'),
           content: SingleChildScrollView(
@@ -184,8 +189,9 @@ class AppDialog {
                         Text('Tổng thu: '),
                         const Spacer(),
                         Text(
-                          '+${income.toString()}',
+                          '+$formattedInCome',
                           style: TextStyle(color: Colors.green),
+                          textAlign: TextAlign.left,
                         ),
                         Text(' VNĐ'),
                       ],
@@ -195,8 +201,9 @@ class AppDialog {
                         Text('Tổng chi: '),
                         const Spacer(),
                         Text(
-                          '-${expense.toString()}',
+                          '-$formattedExpence',
                           style: TextStyle(color: Colors.red),
+                          textAlign: TextAlign.left,
                         ),
                         Text(' VNĐ'),
                       ],
@@ -207,18 +214,21 @@ class AppDialog {
                         const Spacer(),
                         if (balance < 0)
                           Text(
-                            '${balance.toString()}',
+                            formattedBalance,
                             style: TextStyle(color: Colors.red),
+                            textAlign: TextAlign.left,
                           )
                         else if (balance > 0)
                           Text(
-                            '+${balance.toString()}',
+                            '+$formattedBalance',
                             style: TextStyle(color: Colors.green),
+                            textAlign: TextAlign.left,
                           )
                         else
                           Text(
-                            balance.toString(),
+                            formattedBalance,
                             style: TextStyle(color: Colors.grey),
+                            textAlign: TextAlign.left,
                           ),
                         Text(' VNĐ'),
                       ],
