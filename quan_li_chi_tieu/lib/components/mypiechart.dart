@@ -6,16 +6,19 @@ import 'package:quan_li_chi_tieu/models/spending.dart';
 import 'package:quan_li_chi_tieu/services/share_service.dart';
 
 class MyPieChart extends StatefulWidget {
-  final Account? accountNow;
-  MyPieChart({super.key, this.accountNow});
+  final Account accountNow;
+  const MyPieChart(this.accountNow, {super.key});
 
   @override
   State<MyPieChart> createState() => _MyPieChartState();
 }
 
 class _MyPieChartState extends State<MyPieChart> {
-  void _getListSpending() async {
-    Map<String, List<Spending>> data = await ShareService.getAllUserSpending();
+  Account? _account;
+
+  Future<void> _getListSpending() async {
+    Map<String, List<Spending>>? data =
+        await ShareService.getAllMapSpendingFromJson();
     setState(() {
       listSpending = data;
     });
@@ -26,12 +29,12 @@ class _MyPieChartState extends State<MyPieChart> {
     // TODO: implement initState
     super.initState();
     _getListSpending();
+    _account = widget.accountNow;
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Spending>? listSpendingofUser =
-        listSpending[widget.accountNow!.username];
+    List<Spending>? listSpendingofUser = listSpending?[_account!.username];
     Map<String, double> dataMap = {}; // Khởi tạo map rỗng
 
     if (listSpendingofUser != null && listSpendingofUser.isNotEmpty) {
@@ -58,7 +61,7 @@ class _MyPieChartState extends State<MyPieChart> {
         child: PieChart(
           dataMap: dataMap,
           animationDuration: Duration(milliseconds: 800),
-          chartRadius: MediaQuery.of(context).size.width / 3,
+          chartRadius: MediaQuery.of(context).size.width / 3.5,
           chartType: ChartType.ring, // hoặc ring nếu muốn vòng khuyết
           chartValuesOptions: ChartValuesOptions(
             showChartValuesInPercentage: true,

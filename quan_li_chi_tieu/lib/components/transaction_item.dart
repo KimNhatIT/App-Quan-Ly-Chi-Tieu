@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quan_li_chi_tieu/models/spending.dart';
 
 class TransactionItem extends StatelessWidget {
@@ -6,10 +7,15 @@ class TransactionItem extends StatelessWidget {
   final Function()? onDelete;
   final Function()? onEdit;
 
-  const TransactionItem(this.spending, {super.key, this.onDelete, this.onEdit});
+  TransactionItem(this.spending, {super.key, this.onDelete, this.onEdit});
 
   @override
   Widget build(BuildContext context) {
+    int amount = spending.amount;
+
+    final formatter = NumberFormat.decimalPattern('vi_VN');
+    String formatted = formatter.format(amount);
+
     return Column(
       children: [
         ListTile(
@@ -26,12 +32,12 @@ class TransactionItem extends StatelessWidget {
                   const Text('Số tiền: '),
                   if (spending.type == 'Tiền chi')
                     Text(
-                      '-${spending.amount} VNĐ',
+                      '-$formatted VNĐ',
                       style: const TextStyle(color: Colors.red),
                     )
                   else
                     Text(
-                      '+${spending.amount} VNĐ',
+                      '+$formatted VNĐ',
                       style: const TextStyle(color: Colors.green),
                     ),
                 ],
