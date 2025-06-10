@@ -70,12 +70,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Đăng ký thành công')));
-        Navigator.pushAndRemoveUntil(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => LoginPage(username: username),
           ),
-          (Route<dynamic> route) => false,
         );
       } else {
         listAccounts.add(newAccount);
@@ -84,12 +83,11 @@ class _RegisterPageState extends State<RegisterPage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Đăng ký thành công')));
-        Navigator.pushAndRemoveUntil(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => LoginPage(username: username),
           ),
-          (Route<dynamic> route) => false,
         );
       }
     }
@@ -103,7 +101,6 @@ class _RegisterPageState extends State<RegisterPage> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
                   'Đăng Ký',
